@@ -30,51 +30,6 @@ public class CPU {
     /* Start interrupt process address */
     private static final int INTERUPT_PROCESS_ADDRESS = 1500;
 
-    /* Instruction set */
-    private enum InstructionInfo {
-        LOAD_VALUE(1, 1),
-        LOAD_ADDR(2, 1),
-        LOAD_IND_ADDR(3, 1),
-        LOAD_IDX_X_ADDR(4, 1),
-        LOAD_IDX_Y_ADDR(5, 1),
-        LOAD_SPX(6, 1),
-        STORE_ADDR(7, 1),
-        GET(8, 0),
-        PUT_PORT(9, 1),
-        ADD_X(10, 0),
-        ADD_Y(11, 0),
-        SUB_X(12, 0),
-        SUB_Y(13, 0),
-        COPY_TO_X(14, 1),
-        COPY_FROM_X(15, 1),
-        COPY_TO_Y(16, 1),
-        COPY_FROM_Y(17, 1),
-        COPY_TO_SP(18, 0),
-        COPY_FROM_SP(19, 0),
-        JUMP_ADDR(20, 1),
-        JUMP_IF_EQUAL(21, 1),
-        JUMP_IF_NOT_EQUAL(22, 1),
-        CALL_ADDR(23, 1),
-        RET(24, 0),
-        INCX(25, 0),
-        DECX(26, 0),
-        PUSH(27, 0),
-        POP(28, 0),
-        INT(29, 0),
-        IRET(30, 0),
-        END(50, 0);
-
-        /* Instruction opt code */
-        private int optCode;
-        /* Number of Instruction's operands */
-        private int numOfOperands;
-
-        private InstructionInfo(int optCode, int numOfOperands) {
-            this.optCode = optCode;
-            this.numOfOperands = numOfOperands;
-        }
-    }
-
     /* CPU's ports */
     private List<Port> portList;
     /* CPU's timer */

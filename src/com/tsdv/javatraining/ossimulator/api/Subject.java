@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Require Java8
  * @author TrinhNX
  */
 public class Subject {
@@ -21,7 +21,8 @@ public class Subject {
 
     /**
      * Attach an observer to the list
-     * @param observer 
+     *
+     * @param observer
      */
     public void attach(Observer observer) {
         if (!observers.contains(observer)) {
@@ -31,7 +32,8 @@ public class Subject {
 
     /**
      * Remove an observer from list
-     * @param observer 
+     *
+     * @param observer
      */
     public void detach(Observer observer) {
         observers.remove(observer);
@@ -41,8 +43,8 @@ public class Subject {
      * Trigger the list observers
      */
     public void notifyAllObservers() {
-        for (Observer observer : observers) {
+        observers.forEach((observer) -> {
             observer.onTimerEvent();
-        }
+        });
     }
 }
