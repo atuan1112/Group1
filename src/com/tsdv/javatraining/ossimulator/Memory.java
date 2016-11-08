@@ -12,8 +12,6 @@ package com.tsdv.javatraining.ossimulator;
 public class Memory {
     private int[] data;
     private int capacity;
-    private int programAddress = -1;
-    private int programSize = -1;
     
     /**
      * Constructor for Memory class
@@ -34,8 +32,8 @@ public class Memory {
     public void load(ProgramData data[]) {
         for (int i = 0; i < data.length; i ++) {
             if (data[i].address > 0 && data[i].data.length > 0) {
-                programAddress = data[i].address;
-                programSize = data[i].data.length;
+                int programAddress = data[i].address;
+                int programSize = data[i].data.length;
                 for (int j = 0; j < programSize; j ++) {
                     this.data[programAddress + j] = data[i].data[j];
                 }
@@ -66,5 +64,9 @@ public class Memory {
      */
     public void write(int address, int data) {
         this.data[address] = data;
+    }
+
+    public int getCapacity() {
+        return capacity;
     }
 }

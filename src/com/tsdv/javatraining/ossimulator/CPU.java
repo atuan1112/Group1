@@ -78,13 +78,24 @@ public class CPU {
      */
     public void start(){
         // init registers
+        initRegisters();
         // while not end of program
+        while (isEndProgram == false){
             // fetch instruction
             // decode instruction
             // increase PC
             // execute instruction
             // update timer
-        throw new UnsupportedOperationException();
+        }
+        // throw new UnsupportedOperationException();
+    }
+    
+    private void initRegisters(){
+        PC = 0;
+        SP = memory.getCapacity() - 1;
+        AC = 0;
+        X = 0;
+        Y = 0;
     }
     
     /**
@@ -104,8 +115,11 @@ public class CPU {
     private void fetchInstruction(){
         // read next instruction in memory at the address in PC
         // store the instrucion in IR
+        IR  = memory.read(PC);
         // increase PC
-        throw new UnsupportedOperationException();
+        PC++;
+        
+        //throw new UnsupportedOperationException();
     }
     
     /**
@@ -114,14 +128,34 @@ public class CPU {
      */
     private Instruction decodeInstruction(){
         // Create new instruction object
+        Instruction instruction = new Instruction();
+        InstructionInfo instructionInfo = null;
+    
         // find the instruction info from instruction set
+        instructionInfo = findInstructionInfo();
+        instruction.setInfo(instructionInfo);
+        
         // read the operands from memory
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < instructionInfo.numOfOperands; i ++){
+            int operand = memory.read(PC);
+            PC++;
+            instruction.addOperands(operand);
+        }
+
+        return instruction;
+        // throw new UnsupportedOperationException();
     }
     
     private InstructionInfo findInstructionInfo()
     {
-        throw new UnsupportedOperationException();
+        for (InstructionInfo info : InstructionInfo.values()) 
+        {
+            if (info.optCode == IR){
+                return info;
+            }
+        }
+        throw new IllegalArgumentException(ErrMessage.NOT_SUPPORT_INSTRUCTION);
+        // throw new UnsupportedOperationException();
     }
     
     /**
@@ -229,9 +263,7 @@ public class CPU {
                 executeEnd();
                 break;
             default:
-                portErr(ErrMessage.NOT_SUPPORT_INSTRUCTION);
-                endProgram();
-                break;
+                throw new IllegalArgumentException(ErrMessage.NOT_SUPPORT_INSTRUCTION);
         }
 
         // throw new UnsupportedOperationException();
