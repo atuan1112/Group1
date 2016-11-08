@@ -24,7 +24,8 @@ import java.util.regex.Pattern;
 public class SegmentParser {
 
     /**
-     * Fix the pattern : Either number or the .plusnumber or the -plusnumber (only 1)
+     * Fix the pattern : Either number or the .plusnumber or the -plusnumber
+     * (only 1)
      */
     private static final String SEGMENT_REGEX = "(^\\d++)|(^[\\.\\-]{1}\\d++)";
     /**
@@ -83,7 +84,7 @@ public class SegmentParser {
      * @param line
      * @return
      */
-    private static boolean isValidInstruction(final String line) {
+    public static boolean isValidInstruction(final String line) {
         return matchInstruction(line).find();
     }
 
@@ -93,15 +94,16 @@ public class SegmentParser {
      * @param line
      * @return -1 if the line is not matcher
      */
-    private static int getInstructionData(final String line) {
+    public static int getInstructionData(final String line) {
         int instructionAddress = -1;
         Matcher matcher = matchInstruction(line);
         boolean findMatcher = matcher.find();
         if (findMatcher) {
             final String address = matcher.group();
             int dotIndex = address.indexOf('.');
-            if (dotIndex == -1) {
-                instructionAddress = Integer.parseInt(address.substring(dotIndex));
+            if (dotIndex != -1) {
+                String subString = address.substring(dotIndex + 1);
+                instructionAddress = Integer.parseInt(subString);
             } else {
                 instructionAddress = Integer.parseInt(address);
             }
@@ -116,32 +118,7 @@ public class SegmentParser {
      * @return
      */
     private static Matcher matchInstruction(final String line) {
-        return SEGMENT_PATTERN.matcher(line);
-    }
-
-    public static void main(String args[]) {
-        Pattern pattern = Pattern.compile(SEGMENT_REGEX);
-        final String match_1 = " .100 //abc";
-        final String match_2 = " -1, //abc";
-        final String match_3 = "0 a";
-        final String match_4 = "3";
-
-        final String not_match_1 = "a";
-        final String not_match_2 = "a1";
-        final String not_match_3 = ".a";
-        final String not_match_4 = "#3";
-
-        for (String matched : new String[]{match_1, match_2, match_3, match_4}) {
-            Matcher matcher = pattern.matcher(matched.trim());
-
-            System.out.println(matcher.find());
-            System.out.println(matcher.group());
-        }
-
-        for (String not_matched : new String[]{not_match_1, not_match_2, not_match_3, not_match_4}) {
-            Matcher matcher = pattern.matcher(not_matched.trim());
-            System.out.println(matcher.find());
-        }
-
+        final String trimmed = line.trim();
+        return SEGMENT_PATTERN.matcher(trimmed);
     }
 }
