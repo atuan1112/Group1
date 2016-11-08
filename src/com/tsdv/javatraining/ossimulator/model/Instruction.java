@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Class to represent instruction opt code and its operands
- *
+ * Test commit
  * @author ToanTV
  */
 public class Instruction {
