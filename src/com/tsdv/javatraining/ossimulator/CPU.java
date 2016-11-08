@@ -77,6 +77,7 @@ public class CPU {
      * Start the cpu operation
      */
     public void start(){
+        // init registers
         // while not end of program
             // fetch instruction
             // decode instruction
@@ -118,28 +119,122 @@ public class CPU {
         throw new UnsupportedOperationException();
     }
     
-    private void findInstructionInfo()
+    private InstructionInfo findInstructionInfo()
     {
-        
+        throw new UnsupportedOperationException();
     }
     
     /**
      * Execute instruction
      * @param instruction instruction to be executed
      */
-    private void executeInstruction(Instruction instruction){
+    private void executeInstruction(Instruction instruction) {
         InstructionInfo info = instruction.getInfo();
         List<Integer> operands = instruction.getOperands();
-        
+
         // switch base on instruction info
         // call the coresponding function
-        switch (info)
-        {
-            case LOAD_VALUE: 
+        switch (info) {
+            case LOAD_VALUE:
+                executeLoadValue(operands.get(0));
+                break;
+            case LOAD_ADDR:
+                executeLoadAddr(operands.get(0));
+                break;
+            case LOAD_IND_ADDR:
+                executeLoadIndAddr(operands.get(0));
+                break;
+            case LOAD_IDX_X_ADDR:
+                executeLoadIdxXAddr(operands.get(0));
+                break;
+            case LOAD_IDX_Y_ADDR:
+                executeLoadIdxYAddr(operands.get(0));
+                break;
+            case LOAD_SPX:
+                executeLoadSpx();
+                break;
+            case STORE_ADDR:
+                executeStoreAddr(operands.get(0));
+                break;
+            case GET:
+                executeGet();
+                break;
+            case PUT_PORT:
+                executePutPort(operands.get(0));
+                break;
+            case ADD_X:
+                executeAddX();
+                break;
+            case ADD_Y:
+                executeAddY();
+                break;
+            case SUB_X:
+                executeSubX();
+                break;
+            case SUB_Y:
+                executeSubY();
+                break;
+            case COPY_TO_X:
+                executeCopyToX();
+                break;
+            case COPY_FROM_X:
+                executeCopyFromX();
+                break;
+            case COPY_TO_Y:
+                executeCopyToY();
+                break;
+            case COPY_FROM_Y:
+                executeCopyFromY();
+                break;
+            case COPY_TO_SP:
+                executeCopyToSp();
+                break;
+            case COPY_FROM_SP:
+                executeCopyFromSp();
+                break;
+            case JUMP_ADDR:
+                executeJumpAddr(operands.get(0));
+                break;
+            case JUMP_IF_EQUAL:
+                executeJumpIfEqual(operands.get(0));
+                break;
+            case JUMP_IF_NOT_EQUAL:
+                executeJumpIfNotEqual(operands.get(0));
+                break;
+            case CALL_ADDR:
+                executeCallAddr(operands.get(0));
+                break;
+            case RET:
+                executeRet();
+                break;
+            case INCX:
+                executeIncX();
+                break;
+            case DECX:
+                executeDecX();
+                break;
+            case PUSH:
+                executePush();
+                break;
+            case POP:
+                executePop();
+                break;
+            case INT:
+                executeInt();
+                break;
+            case IRET:
+                executeIret();
+                break;
+            case END:
+                executeEnd();
+                break;
             default:
+                portErr(ErrMessage.NOT_SUPPORT_INSTRUCTION);
+                endProgram();
+                break;
         }
-        
-        throw new UnsupportedOperationException();
+
+        // throw new UnsupportedOperationException();
     }
     
     /**
@@ -334,4 +429,14 @@ public class CPU {
         throw new UnsupportedOperationException();
     }
     
+    private void portErr(String errMsg){
+        for (int i = 0; i < errMsg.length(); i ++) {
+            portList.get(1).outData(errMsg.charAt(i));
+        }
+        portList.get(1).outData('\n');
+    }
+    
+    private void endProgram(){
+        isEndProgram = true;
+    }
 }
