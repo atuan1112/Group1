@@ -21,6 +21,13 @@ public class OperatingSystem {
 
         // throw new UnsupportedOperationException();
     }
+
+    public void setTimer(int TickTime){
+        // set tick time for timer CPU
+        cpu.setTimer(0, TickTime);
+
+        // throw new UnsupportedOperationException();
+    }    
     
     public void eraseProgram(){
         // clear memory

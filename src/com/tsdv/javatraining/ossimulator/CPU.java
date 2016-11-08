@@ -7,6 +7,7 @@ package com.tsdv.javatraining.ossimulator;
 
 import com.tsdv.javatraining.ossimulator.api.Timer;
 import com.tsdv.javatraining.ossimulator.model.Instruction;
+import com.tsdv.javatraining.ossimulator.model.InstructionInfo;
 import java.util.List;
 
 /**
@@ -40,10 +41,20 @@ public class CPU {
     
     public CPU(Memory memory) {
         // set refer to memory
+        this.memory = memory;
         // init timer
+        
         // init port
+        Port port1 = new Port(1);
+        Port port2 = new Port(2);
+        
+        portList.add(port1);
+        portList.add(port2);
+        
         // set end flag to flase
-        throw new UnsupportedOperationException();
+        isEndProgram = false;
+        
+        // throw new UnsupportedOperationException();
     }
     
     public void setTimer(int TimerID, int TickTime){
@@ -53,7 +64,13 @@ public class CPU {
     
     public void connectPeripheral(int portID, Peripheral peripheral){
         // connect port to peripheral
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < portList.size(); i++ ) {
+            Port port = portList.get(i);
+            if (port.getId() == portID) {
+                port.connect(peripheral);
+            }
+        }
+        // throw new UnsupportedOperationException();
     }
     
     /**
@@ -74,7 +91,9 @@ public class CPU {
      */
     private void processTimerInterrupt(){
         // push system state
+        pushSystemState();
         // update PC = TIMER_PROCESS_ADDRESS
+        PC = TIMER_PROCESS_ADDRESS;
         throw new UnsupportedOperationException();
     }
     
@@ -109,8 +128,17 @@ public class CPU {
      * @param instruction instruction to be executed
      */
     private void executeInstruction(Instruction instruction){
+        InstructionInfo info = instruction.getInfo();
+        List<Integer> operands = instruction.getOperands();
+        
         // switch base on instruction info
         // call the coresponding function
+        switch (info)
+        {
+            case LOAD_VALUE: 
+            default:
+        }
+        
         throw new UnsupportedOperationException();
     }
     

@@ -19,9 +19,9 @@ public class Port {
      * @param id id of port
      * @param value value of port
      */
-    public Port(int id, int value) {
+    public Port(int id) {
         this.id = id;
-        this.value = value;
+        this.value = 0;
         connect(null);
     }
     
@@ -32,7 +32,9 @@ public class Port {
      * @param peripheral peripheral connect to this port
      */
     public Port(int id, int value, Peripheral peripheral) {
+        this.id = id;
         connect(peripheral);
+        outData(value);
     }
     
     /**
@@ -48,8 +50,18 @@ public class Port {
      * @param value output data
      */
     public void outData(int value) {
+        this.value = value;
         if (this.peripheral != null) {
             this.peripheral.outData(value);
         }
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
 }
