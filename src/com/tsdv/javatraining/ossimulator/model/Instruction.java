@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Instruction {
 
-    private InstructionInfo optCode;
+    private InstructionInfo info;
     private List<Integer> operandList;
 
     public Instruction() {
@@ -22,11 +22,15 @@ public class Instruction {
     }
 
     public int getOptCode() {
-        return optCode;
+        return info.optCode;
     }
 
-    public void setOptCode(int optCode) {
-        this.optCode = optCode;
+    public InstructionInfo getInfo() {
+        return info;
+    }
+
+    public void setInfo(InstructionInfo info) {
+        this.info = info;
     }
 
     public List<Integer> getOperands() {
