@@ -9,7 +9,7 @@ import com.tsdv.javatraining.ossimulator.api.Peripheral;
 import com.tsdv.javatraining.ossimulator.model.Instruction;
 import com.tsdv.javatraining.ossimulator.model.InstructionInfo;
 import com.tsdv.javatraining.ossimulator.model.Port;
-import com.tsdv.javatraining.ossimulator.model.Timer;
+import com.tsdv.javatraining.ossimulator.api.Timer;
 import com.tsdv.javatraining.ossimulator.util.ErrMessage;
 import java.util.List;
 

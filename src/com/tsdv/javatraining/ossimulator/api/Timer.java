@@ -3,10 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsdv.javatraining.ossimulator.model;
-
-import com.tsdv.javatraining.ossimulator.api.Observer;
-import com.tsdv.javatraining.ossimulator.model.Subject;
+package com.tsdv.javatraining.ossimulator.api;
 
 /**
  *
