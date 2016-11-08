@@ -24,6 +24,7 @@ public class Memory {
             throw new UnsupportedOperationException(String.format("Memory size [%d]. Must be greater than 0.", capacity));
         }
         data = new int[capacity];
+        this.capacity = capacity;
     }
     
     /**
@@ -31,11 +32,13 @@ public class Memory {
      * @param data User program data
      */
     public void load(ProgramData data[]) {
-        if (data[i].address > 0 && data[i].data.length > 0) {
-            programAddress = data[i].address;
-            programSize = data[i].data.length;
-            for (int j = 0; j < programSize; j ++) {
-                this.data[programAddress + j] = data.data[i];
+        for (int i = 0; i < data.length; i ++) {
+            if (data[i].address > 0 && data[i].data.length > 0) {
+                programAddress = data[i].address;
+                programSize = data[i].data.length;
+                for (int j = 0; j < programSize; j ++) {
+                    this.data[programAddress + j] = data[i].data[j];
+                }
             }
         }
     }
@@ -44,13 +47,7 @@ public class Memory {
      * Clear loaded user-program
      */
     public void clear() {
-        if (programAddress >= 0) {
-            for (int i = 0; i < programSize; i ++) {
-                this.data[programAddress + i] = 0;
-            }
-            programAddress = -1;
-            programSize = -1;
-        }
+        data = new int[capacity];
     }
     
     /**

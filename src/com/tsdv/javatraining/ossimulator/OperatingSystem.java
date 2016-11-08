@@ -24,11 +24,13 @@ public class OperatingSystem {
     
     public void eraseProgram(){
         // clear memory
+        memory.clear();
         throw new UnsupportedOperationException();
     }
     
     public void StartSimulation(){
         // Start cpu
+        cpu.start();
         throw new UnsupportedOperationException();
     }
     
