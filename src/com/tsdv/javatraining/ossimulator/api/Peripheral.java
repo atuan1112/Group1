@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsdv.javatraining.ossimulator;
+package com.tsdv.javatraining.ossimulator.api;
 
 /**
  * Interface of classes which represent peripheral in computer architecture

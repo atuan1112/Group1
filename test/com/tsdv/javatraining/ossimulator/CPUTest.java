@@ -5,6 +5,7 @@
  */
 package com.tsdv.javatraining.ossimulator;
 
+import com.tsdv.javatraining.ossimulator.model.TextDisplayer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,22 +18,22 @@ import static org.junit.Assert.*;
  * @author Rintaro
  */
 public class CPUTest {
-    
+
     public CPUTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -57,7 +58,7 @@ public class CPUTest {
     @Test
     public void testConnectPeripheral() {
         Memory memory = new Memory(2000);
-        TextDisplayer textDisplayer = new TextDisplayer(1);
+        TextDisplayer textDisplayer = new TextDisplayer();
         try {
             CPU cpu = new CPU(memory);
             cpu.connectPeripheral(0, textDisplayer);
@@ -79,5 +80,5 @@ public class CPUTest {
             fail("Not implement");
         }
     }
-    
+
 }

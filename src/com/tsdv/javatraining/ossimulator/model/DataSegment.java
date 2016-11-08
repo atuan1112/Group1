@@ -31,6 +31,15 @@ public class DataSegment {
         return data;
     }
 
+    public int getDataFromIndex(int index) {
+        // TODO: Index out of bound exception checking
+        return data[index];
+    }
+
+    public int size() {
+        return data.length;
+    }
+
     /**
      * Helper class to build the datasegment
      */
