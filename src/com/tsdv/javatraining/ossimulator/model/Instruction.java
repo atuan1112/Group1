@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Instruction {
 
-    private int optCode;
+    private InstructionInfo optCode;
     private List<Integer> operandList;
 
     public Instruction() {
