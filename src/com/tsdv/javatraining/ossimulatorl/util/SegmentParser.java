@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsdv.javatraining.ossimulator.model.util;
+package com.tsdv.javatraining.ossimulatorl.util;
 
 import com.tsdv.javatraining.ossimulator.model.DataSegment;
 import java.io.BufferedReader;
