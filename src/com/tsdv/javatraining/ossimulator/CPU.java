@@ -82,10 +82,13 @@ public class CPU {
         // while not end of program
         while (isEndProgram == false){
             // fetch instruction
+            fetchInstruction();
             // decode instruction
-            // increase PC
+            Instruction instruction = decodeInstruction();
             // execute instruction
+            executeInstruction(instruction);
             // update timer
+            
         }
         // throw new UnsupportedOperationException();
     }
