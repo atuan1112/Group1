@@ -17,7 +17,9 @@ public class OperatingSystem {
     
     public void loadProgram(ProgramData programData[]){
         // load user program data to memory
-        throw new UnsupportedOperationException();
+        memory.load(programData);
+
+        // throw new UnsupportedOperationException();
     }
     
     public void eraseProgram(){
@@ -32,17 +34,24 @@ public class OperatingSystem {
     
     private void InitComponents(){
         // create new memory
+        memory = new Memory(SYSTEM_MEMORY_SIZE);
+        
         // create new cpu 
         // connect cpu with memory
+        cpu = new CPU(memory);
+        
         // create text displayer
+        TextDisplayer textDisplayer = new TextDisplayer();
         // create number displayer
+        NumberDisplayer numDisplayer = new NumberDisplayer();
         // connect port 1 of cpu to text displyaer
+        cpu.connectPeripheral(1, numDisplayer);
         // connect port 2 os cpu to number dislayer
-        throw new UnsupportedOperationException();
+        cpu.connectPeripheral(2, textDisplayer);
     }
 
     public OperatingSystem() {
-        // InitComponents
+        InitComponents();
     }
     
     

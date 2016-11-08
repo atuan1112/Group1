@@ -30,12 +30,12 @@ public class Memory {
      * Load user program
      * @param data User program data
      */
-    public void load(ProgramData data) {
-        if (data.address > 0 && data.data.length > 0) {
-            programAddress = data.address;
-            programSize = data.data.length;
-            for (int i = 0; i < programSize; i ++) {
-                this.data[programAddress + i] = data.data[i];
+    public void load(ProgramData data[]) {
+        if (data[i].address > 0 && data[i].data.length > 0) {
+            programAddress = data[i].address;
+            programSize = data[i].data.length;
+            for (int j = 0; j < programSize; j ++) {
+                this.data[programAddress + j] = data.data[i];
             }
         }
     }

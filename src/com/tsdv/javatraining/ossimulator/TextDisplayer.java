@@ -10,14 +10,13 @@ package com.tsdv.javatraining.ossimulator;
  * 
  */
 public class TextDisplayer implements Peripheral {
-    private int type = -1;
+    private int type = TEXT_DISPLAYER;
     
     /**
      * Constructor for TextDisplayer
      * @param type type of peripheral
      */
-    public TextDisplayer(int type) {
-        this.type = type;
+    public TextDisplayer() {
     }
 
     /**

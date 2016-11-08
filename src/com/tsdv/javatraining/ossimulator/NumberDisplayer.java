@@ -10,14 +10,13 @@ package com.tsdv.javatraining.ossimulator;
  * 
  */
 public class NumberDisplayer implements Peripheral {
-    private int type = -1;
+    private int type = NUMBER_DISPLAYER;
     
     /**
      * Constructor for NumberDisplayer
      * @param type type of peripheral
      */
-    public NumberDisplayer(int type) {
-        this.type = type;
+    public NumberDisplayer() {
     }
 
     /**

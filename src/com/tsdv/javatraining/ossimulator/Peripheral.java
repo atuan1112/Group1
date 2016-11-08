@@ -10,6 +10,9 @@ package com.tsdv.javatraining.ossimulator;
  * 
  */
 public interface Peripheral {
+    static final int TEXT_DISPLAYER = 1;
+    static final int NUMBER_DISPLAYER = 2;
+    
     /**
      * Get peripheral type
      * @return type
