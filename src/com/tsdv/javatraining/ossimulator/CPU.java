@@ -392,7 +392,7 @@ public class CPU {
 
     private void executeJumpAddr(int addr) {
         // PC = addr
-        this.PC = this.addr;
+        this.PC = addr;
     }
 
     private void executeJumpIfEqual(int addr) {
