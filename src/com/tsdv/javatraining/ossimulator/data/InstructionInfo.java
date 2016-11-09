@@ -53,10 +53,18 @@ public enum InstructionInfo {
         this.numOfOperands = numOfOperands;
     }
 
+    /**
+     * Get optCode
+     * @return 
+     */
     public int getOptCode() {
         return optCode;
     }
 
+    /**
+     * Get number of operand
+     * @return 
+     */
     public int getNumOfOperands() {
         return numOfOperands;
     }

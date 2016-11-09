@@ -26,8 +26,6 @@ public class OSSimulator {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO: Parse argument
-        // TODO: Hardcoded
         final int tickTime;
         final String instructionFilePath;
         if (args == null || args.length == 0 || args.length < 2) {
