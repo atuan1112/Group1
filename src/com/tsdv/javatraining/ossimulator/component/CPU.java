@@ -585,8 +585,8 @@ public class CPU {
      * @param errMsg 
      */
     private void portErr(String errMsg){
-        for (int i = 0; i < errMsg.length(); i ++) {
-            portList.get(1).outData(errMsg.charAt(i));
+        for(char msgChar : errMsg.toCharArray()) {
+            portList.get(1).outData(msgChar);
         }
         portList.get(1).outData('\n');
     }
