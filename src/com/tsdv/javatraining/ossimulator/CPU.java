@@ -8,6 +8,7 @@ package com.tsdv.javatraining.ossimulator;
 import com.tsdv.javatraining.ossimulator.api.Timer;
 import com.tsdv.javatraining.ossimulator.model.Instruction;
 import java.util.List;
+import java.util.Random;
 
 /**
  *  Class represent the CPU
@@ -119,7 +120,7 @@ public class CPU {
      */
     private void executeLoadValue(int value) {
         // AC = value
-        throw new UnsupportedOperationException();
+        this.AC = value;
     }
 
     /**
@@ -128,147 +129,159 @@ public class CPU {
     private void executeLoadAddr(int addr) {
         // read memory at the adrr
         // store the value to AC
-        throw new UnsupportedOperationException();
+        this.AC = this.memory.read(addr);
     }
 
     private void executeLoadIndAddr(int indAddr) {
         // read memory at the indAdrr to get the direct addr
         // read memory at the direct addr to get the value
         // store the value to AC 
-        throw new UnsupportedOperationException();
+        int realAddr = this.memory.read(indAddr);
+        this.AC = this.memory.read(realAddr);
     }
 
     private void executeLoadIdxXAddr(int addr) {
         // read memory at addr + X
         // store the read value to AC        
-        throw new UnsupportedOperationException();
+        this.AC = this.memory.read(addr + this.X);
     }
 
     private void executeLoadIdxYAddr(int addr) {
         // read memory at addr + Y
         // store the read value to AC
-        throw new UnsupportedOperationException();
+        this.AC = this.memory.read(addr + this.Y);
     }
 
     private void executeLoadSpx() {
         // read memory at SP + X
         // store the read value to AC
-        throw new UnsupportedOperationException();
+        this.AC = this.memory.read(this.SP - this.X); // SP grow down toward 0
     }
 
     private void executeStoreAddr(int addr) {
         // write value of AC to addr 
-        throw new UnsupportedOperationException();
+        this.memory.write(addr, this.AC);
     }
 
     private void executeGet() {
         // random number from 1 to 100 to AC
-        throw new UnsupportedOperationException();
+        Random r = new Random();
+        int low = 1;
+        int high = 100;
+        this.AC = r.nextInt(high - low) + low;
     }
 
     private void executePutPort(int portID) {
         // output data to port
-        throw new UnsupportedOperationException();
+        Port port = this.portList.get(portID);
+        if (port != null) {
+            port.outData(AC);
+        }
     }
 
     private void executeAddX() {
         // AC = AC + X
-        throw new UnsupportedOperationException();
+        this.AC += this.X;
     }
 
     private void executeAddY() {
         // AC = AC + Y
-        throw new UnsupportedOperationException();
+        this.AC += this.Y;
     }
 
     private void executeSubX() {
         // AC = AC - X
-        throw new UnsupportedOperationException();
+        this.AC -= this.X;
     }
 
     private void executeSubY() {
         // AC = AC - Y
-        throw new UnsupportedOperationException();
+        this.AC -= this.Y;
     }
 
     private void executeCopyToX() {
         // X = AC
-        throw new UnsupportedOperationException();
+        this.X = this.AC;
     }
 
     private void executeCopyFromX() {
         // AC = X
-        throw new UnsupportedOperationException();
+        this.AC = this.X;
     }
 
     private void executeCopyToY() {
         // Y = AC
-        throw new UnsupportedOperationException();
+        this.Y = this.AC;
     }
 
     private void executeCopyFromY() {
         // AC = Y
-        throw new UnsupportedOperationException();
+        this.AC = this.Y;
     }
 
     private void executeCopyToSp() {
         // SP = AC
-        throw new UnsupportedOperationException();
+        this.SP = this.AC;
     }
 
     private void executeCopyFromSp() {
         // AC = SP
-        throw new UnsupportedOperationException();
+        this.AC = this.SP;
     }
 
     private void executeJumpAddr(int addr) {
         // PC = addr
-        throw new UnsupportedOperationException();
+        this.PC = this.addr;
     }
 
     private void executeJumpIfEqual(int addr) {
         // if AC == 0
             // PC = addr
-        throw new UnsupportedOperationException();
+        if (this.AC == 0)
+            this.PC = addr;
     }
 
     private void executeJumpIfNotEqual(int addr) {
         // if AC != 0
             // PC = addr
-        throw new UnsupportedOperationException();
+        if (this.AC != 0)
+            this.PC = addr;
     }
 
     private void executeCallAddr(int addr) {
         // push system state
         // PC = addr
-        throw new UnsupportedOperationException();
+        pushSystemState();
+        this.PC = addr;
     }
 
     private void executeRet() {
         // pop system state
-        throw new UnsupportedOperationException();
+        popSystemState();
     }
 
     private void executeIncX() {
         // X++
-        throw new UnsupportedOperationException();
+        this.X++;
     }
 
     private void executeDecX() {
         // X--
-        throw new UnsupportedOperationException();
+        this.X--;
     }
 
     private void executePush() {
         // write AC to memory at address in SP
         // SP--
-        throw new UnsupportedOperationException();
+        this.memory.write(SP, AC);
+        this.SP--;
     }
 
     private void executePop() {
         // read AC from memory at address in SP
         // SP++
-        throw new UnsupportedOperationException();
+        this.AC = this.memory.read(SP);
+        SP++;
     }
 
     private void executeInt() {
