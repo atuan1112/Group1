@@ -30,7 +30,7 @@ public class TextDisplayer implements Peripheral {
      */
     @Override
     public void outData(int data) {
-        System.out.print(((char) data));
+        System.out.print((char) data);
     }
 
 }

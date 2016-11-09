@@ -84,9 +84,9 @@ public class CPU {
         
     }
     
-    public void setTimer(int TimerID, int TickTime){
+    public void setTimerPeriod(int TimerID, int TickTime){
         // set Timer interval time
-        Timer timer = timerList.get(TimerID - 1);
+        Timer timer = timerList.get(TimerID);
         timer.setTickTime(TickTime);
         timer.reset();
     }

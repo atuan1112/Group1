@@ -20,7 +20,7 @@ public class OSSimulator {
     /**
     Default file path for OS
      */
-    private static final String FILE_PATH = "resources/program1.txt";
+    private static final String FILE_PATH = "resources/program3.txt";
 
     /**
      * @param args the command line arguments

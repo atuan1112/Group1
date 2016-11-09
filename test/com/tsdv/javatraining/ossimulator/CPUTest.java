@@ -41,14 +41,14 @@ public class CPUTest {
     }
 
     /**
-     * Test of setTimer method, of class CPU.
+     * Test of setTimerPeriod method, of class CPU.
      */
     @Test
     public void testSetTimer() {
         Memory memory = new Memory(2000);
         try {
             CPU cpu = new CPU(memory);
-            cpu.setTimer(1, 500);
+            cpu.setTimerPeriod(0, 500);
         } catch (UnsupportedOperationException e) {
             fail("Not implement");
         }

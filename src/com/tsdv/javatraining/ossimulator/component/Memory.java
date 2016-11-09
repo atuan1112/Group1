@@ -16,7 +16,7 @@ import java.util.List;
  *
  */
 public class Memory {
-    
+
     private int[] data;
     private int capacity;
 
@@ -43,14 +43,12 @@ public class Memory {
         // loop all segment
         for (int i = 0; i < data.size(); i++) {
             // load data from each segement
-            DataSegment segement = data.get(i);
-            int address = segement.getAddress();
-            int size = segement.size();
-            if (segement.getAddress() >= 0 && segement.size() > 0) {
-                int programAddress = segement.getAddress();
-                int programSize = segement.size();
-                for (int j = 0; j < programSize; j++) {
-                    this.data[programAddress + j] = segement.getDataFromIndex(j);
+            DataSegment segment = data.get(i);
+            int address = segment.getAddress();
+            int size = segment.size();
+            if (address >= 0 && size > 0) {
+                for (int j = 0; j < size; j++) {
+                    this.data[address + j] = segment.getDataFromIndex(j);
                 }
             }
         }
@@ -90,7 +88,7 @@ public class Memory {
         }
         this.data[address] = data;
     }
-    
+
     public int getCapacity() {
         return capacity;
     }

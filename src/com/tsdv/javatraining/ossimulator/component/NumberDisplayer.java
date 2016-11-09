@@ -30,6 +30,6 @@ public class NumberDisplayer implements Peripheral {
      */
     @Override
     public void outData(int data) {
-        System.out.print(data);
+        System.out.println(data);
     }
 }

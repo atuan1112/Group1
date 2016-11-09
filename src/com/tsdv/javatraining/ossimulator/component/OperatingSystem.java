@@ -22,8 +22,8 @@ public class OperatingSystem {
 
     public OperatingSystem() {
         InitComponents();
-    }    
-    
+    }
+
     /**
      * Initialize system components
      */
@@ -43,8 +43,8 @@ public class OperatingSystem {
         cpu.connectPeripheral(1, numDisplayer);
         // connect port 2 os cpu to number dislayer
         cpu.connectPeripheral(2, textDisplayer);
-    }    
-    
+    }
+
     /**
      * Load user program to system memory
      * @param programData 
@@ -68,9 +68,9 @@ public class OperatingSystem {
      */
     public void setTimer(int TickTime) {
         // set tick time for timer CPU
-        cpu.setTimer(1, TickTime);
+        cpu.setTimerPeriod(0, TickTime);
     }
-    
+
     /**
      * start system
      */
