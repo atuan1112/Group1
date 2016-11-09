@@ -41,7 +41,7 @@ public class CPU {
     /* CPU's timer */    
     private final List<Timer> timerList;
     /* program memory */    
-    private Memory memory;
+    private final Memory memory;
     /* CPU's registers  */    
     private int PC;
     private int SP;

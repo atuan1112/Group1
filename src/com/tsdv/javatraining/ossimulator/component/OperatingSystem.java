@@ -72,10 +72,10 @@ public class OperatingSystem {
     }
     
     /**
-     * Start system
+     * start system
      */
-    public void Start() {
-        // Start cpu
+    public void start() {
+        // start cpu
         cpu.start();
     }
 
