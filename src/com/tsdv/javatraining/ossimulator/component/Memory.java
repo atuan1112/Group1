@@ -29,8 +29,8 @@ public class Memory {
         if (capacity <= 0) {
             throw new UnsupportedOperationException(String.format("Memory size [%d]. Must be greater than 0.", capacity));
         }
-        data = new int[capacity];
-        Arrays.fill(data, 0);
+        this.data = new int[capacity];
+        Arrays.fill(this.data, 0);
         this.capacity = capacity;
     }
 
@@ -41,17 +41,20 @@ public class Memory {
      */
     public void load(List<DataSegment> data) {
         // loop all segment
-        for (int i = 0; i < data.size(); i++) {
+        data.forEach((segment) -> {
             // load data from each segement
-            DataSegment segment = data.get(i);
+            // TODO: Check the capacity with address and size
             int address = segment.getAddress();
             int size = segment.size();
+            if (address + size >= capacity) {
+                throw new OutOfMemoryError(ErrMessage.OUT_OF_ALLOCATED_MEMORY + address + "\t" + size);
+            }
             if (address >= 0 && size > 0) {
-                for (int j = 0; j < size; j++) {
-                    this.data[address + j] = segment.getDataFromIndex(j);
+                for (int i = 0; i < size; i++) {
+                    this.data[address + i] = segment.getDataFromIndex(i);
                 }
             }
-        }
+        });
     }
 
     /**
@@ -66,12 +69,11 @@ public class Memory {
      *
      * @param address
      * @return Integer value at position "address"
-     * @throws com.tsdv.javatraining.ossimulator.exception.IllegalAccessMemoryException
+     * @throws
+     * com.tsdv.javatraining.ossimulator.exception.IllegalAccessMemoryException
      */
     public int read(int address) throws IllegalAccessMemoryException {
-        if (address < 0 || address >= this.data.length) {
-            throw new IllegalAccessMemoryException(ErrMessage.OUR_OF_RANGE_MEMORY);
-        }
+        validAccessMemory(address);
         return data[address];
     }
 
@@ -80,16 +82,21 @@ public class Memory {
      *
      * @param address position where "data" is written
      * @param data value of memory at position "address"
-     * @throws com.tsdv.javatraining.ossimulator.exception.IllegalAccessMemoryException
+     * @throws
+     * com.tsdv.javatraining.ossimulator.exception.IllegalAccessMemoryException
      */
     public void write(int address, int data) throws IllegalAccessMemoryException {
-        if (address < 0 || address >= this.data.length) {
-            throw new IllegalAccessMemoryException(ErrMessage.OUR_OF_RANGE_MEMORY);
-        }
+        validAccessMemory(address);
         this.data[address] = data;
     }
 
     public int getCapacity() {
         return capacity;
+    }
+
+    public void validAccessMemory(int atAddress) throws IllegalAccessMemoryException {
+        if (atAddress < 0 || atAddress >= this.data.length) {
+            throw new IllegalAccessMemoryException(ErrMessage.OUR_OF_RANGE_MEMORY);
+        }
     }
 }

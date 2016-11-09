@@ -53,20 +53,38 @@ public class DataSegment {
             data = new ArrayList<>();
         }
 
+        /**
+         * Set address to segment
+         * @param address
+         * @return 
+         */
         public Builder setAddress(int address) {
             this.address = address;
             return this;
         }
 
+        /**
+         * Add value to data segment
+         * @param value
+         * @return 
+         */
         public Builder addValue(int value) {
             data.add(value);
             return this;
         }
 
+        /**
+         * Check the data had been filled up
+         * @return 
+         */
         public boolean isEmpty() {
             return data.isEmpty();
         }
 
+        /**
+         * An utility to create a datasegment
+         * @return 
+         */
         public DataSegment build() {
             return new DataSegment(address, data.stream().mapToInt(i -> i).toArray());
         }

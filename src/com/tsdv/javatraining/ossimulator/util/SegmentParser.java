@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 /**
  * Class to parse the user program file into data segment
- * 
+ *
  * @author TrinhNX
  */
 public class SegmentParser {
@@ -86,7 +86,7 @@ public class SegmentParser {
      * @return
      */
     public static boolean isValidInstruction(final String line) {
-        if (line == null) {
+        if (line == null || line.isEmpty()) {
             return false;
         }
         return matchInstruction(line).find();
