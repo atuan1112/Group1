@@ -48,7 +48,7 @@ public class CPUTest {
         Memory memory = new Memory(2000);
         try {
             CPU cpu = new CPU(memory);
-            cpu.setTimer(0, 500);
+            cpu.setTimer(1, 500);
         } catch (UnsupportedOperationException e) {
             fail("Not implement");
         }

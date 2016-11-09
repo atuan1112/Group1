@@ -44,6 +44,6 @@ public class Instruction {
     }
 
     public void addOperands(int operand) {
-        throw new UnsupportedOperationException();
+        this.operandList.add(operand);
     }
 }

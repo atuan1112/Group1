@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class OSSimulator {
 
-    public static final String FILE_PATH = "resources/program1.txt";
+    public static final String FILE_PATH = "resources/program5.txt";
 
     /**
      * @param args the command line arguments
@@ -26,7 +26,7 @@ public class OSSimulator {
         // TODO: Parse argument
         // TODO: Hardcoded
 
-        final int tickTime = 100;
+        final int tickTime = 1;
         final String instructionFile = FILE_PATH;
         File programFile = new File(instructionFile);
         OperatingSystem operatingSystem = new OperatingSystem();

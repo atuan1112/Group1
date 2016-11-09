@@ -44,7 +44,9 @@ public class Memory {
         for (int i = 0; i < data.size(); i++) {
             // load data from each segement
             DataSegment segement = data.get(i);
-            if (segement.getAddress() > 0 && segement.size() > 0) {
+            int address = segement.getAddress();
+            int size = segement.size();
+            if (segement.getAddress() >= 0 && segement.size() > 0) {
                 int programAddress = segement.getAddress();
                 int programSize = segement.size();
                 for (int j = 0; j < programSize; j++) {

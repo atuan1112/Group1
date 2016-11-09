@@ -22,6 +22,7 @@ public final class Timer extends TimerSubject {
     public Timer(int tickTime, TimerObserver observer) {
         this.tickTime = tickTime;
         this.currentTime = 0;
+        attach(observer);
     }
 
     public int getTickTime() {

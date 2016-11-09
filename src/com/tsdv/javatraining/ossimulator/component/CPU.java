@@ -37,9 +37,9 @@ public class CPU {
     private static final int SYSTEM_MODE = 1;
     
     /* CPU's ports */
-    private List<Port> portList;
+    private final List<Port> portList;
     /* CPU's timer */    
-    private List<Timer> timerList;
+    private final List<Timer> timerList;
     /* program memory */    
     private Memory memory;
     /* CPU's registers  */    
@@ -302,9 +302,12 @@ public class CPU {
      * update all timers
      */
     private void updateTimer() {
-        timerList.forEach((timer) -> {
-            timer.updateTime();
-        });
+        /* stop counting when in interrupt process or when just return from interrupt */
+        if (CPUState != SYSTEM_MODE && IR != InstructionInfo.IRET.optCode) {
+            timerList.forEach((timer) -> {
+                timer.updateTime();
+            });
+        }
     }
     
     /**
@@ -472,15 +475,15 @@ public class CPU {
     private void executePush() throws IllegalAccessMemoryException {
         // write AC to memory at address in SP
         // SP--
-        this.writeMemory(this.SP, this.AC);
+        this.writeSystemStackMemory(this.SP, this.AC);
         this.SP--;
     }
 
     private void executePop() throws IllegalAccessMemoryException {
+        // SP++        
         // read AC from memory at address in SP
-        // SP++
-        this.AC = this.readMemory(this.SP);
         this.SP++;
+        this.AC = this.readMemory(this.SP);
     }
 
     private void executeInt() throws IllegalAccessMemoryException {
@@ -545,23 +548,36 @@ public class CPU {
     * Store system state before interrupt or function call
     */
     private void pushSystemState() throws IllegalAccessMemoryException{
-        // write PC to memory at the address of SP - 2 in system memory stack
-        // write SP to memory at the address of SP - 3 in system memory stack
-        // SP = SP - 2
-        writeMemory(this.SP - 2, PC);
-        writeMemory(this.SP - 3, SP);
-        this.SP = this.SP - 2;
+        // write PC to memory at the address of SP in system memory stack
+        // write SP to memory at the address of SP - 1 in system memory stack
+        // write AC to memory at the address of SP - 2 in system memory stack
+        // write X to memory at the address of SP - 3 in system memory stack
+        // write Y to memory at the address of SP - 4 in system memory stack        
+        // SP = SP - 5
+        writeSystemStackMemory(this.SP, PC);
+        writeSystemStackMemory(this.SP - 1, SP);
+        writeSystemStackMemory(this.SP - 2, AC);
+        writeSystemStackMemory(this.SP - 3, X);
+        writeSystemStackMemory(this.SP - 4, Y);
+        this.SP = this.SP - 5;
     }
     
     /**
     * Restore system state after interrupt or function call
     */
     private void popSystemState() throws IllegalAccessMemoryException{
+        // SP = SP + 5
         // read new PC from memory at the address of SP in system memory stack
         // read new SP from memory at the address of SP - 1 in system memory stack
-        
+        // read new AC from memory at the address of SP - 2 in system memory stack
+        // read new X from memory at the address of SP - 3 in system memory stack
+        // read new Y from memory at the address of SP - 4 in system memory stack
+        this.SP = this.SP + 5;
         this.PC = readMemory(this.SP);
         this.SP = readMemory(this.SP - 1);
+        this.AC = readMemory(this.SP - 2);
+        this.X = readMemory(this.SP - 3);
+        this.Y = readMemory(this.SP - 4);        
     }
     
     /**
@@ -611,7 +627,7 @@ public class CPU {
     }
     
     /**
-     * read form memory
+     * read from memory
      * @param addr
      * @return
      * @throws IllegalAccessMemoryException 
@@ -622,7 +638,7 @@ public class CPU {
     }
     
     /**
-     * write to memory 
+     * write to memory for common operation 
      * @param addr
      * @param data
      * @throws IllegalAccessMemoryException 
@@ -630,6 +646,20 @@ public class CPU {
     private void writeMemory(int addr, int  data) throws IllegalAccessMemoryException
     {
         if (addr >= SYSTEM_DATA_ADDRESS) {
+            throw new IllegalAccessMemoryException(ErrMessage.INVALID_ACCESS_MEMORY);
+        }
+        this.memory.write(addr, data);
+    }
+    
+     /**
+     * write to memory to system stack 
+     * @param addr
+     * @param data
+     * @throws IllegalAccessMemoryException 
+     */
+    private void writeSystemStackMemory(int addr, int  data) throws IllegalAccessMemoryException
+    {
+        if (addr < SYSTEM_DATA_ADDRESS) {
             throw new IllegalAccessMemoryException(ErrMessage.INVALID_ACCESS_MEMORY);
         }
         this.memory.write(addr, data);
