@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsdv.javatraining.ossimulator.model;
+package com.tsdv.javatraining.ossimulator.component;
 
 import com.tsdv.javatraining.ossimulator.api.Peripheral;
 
 /**
- * NumberDisplayer peripheral
+ * TextDisplayer peripheral
  *
  */
-public class NumberDisplayer implements Peripheral {
+public class TextDisplayer implements Peripheral {
 
     /**
      * Get peripheral type
@@ -30,7 +30,7 @@ public class NumberDisplayer implements Peripheral {
      */
     @Override
     public void outData(int data) {
-        System.out.println(data);
+        System.out.print(((char) data));
     }
 
 }

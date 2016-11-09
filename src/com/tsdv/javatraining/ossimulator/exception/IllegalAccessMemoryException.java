@@ -6,7 +6,7 @@
 package com.tsdv.javatraining.ossimulator.exception;
 
 /**
- *
+ *  Access memory exception
  * @author TrinhNX
  */
 public class IllegalAccessMemoryException extends Exception {

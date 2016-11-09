@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsdv.javatraining.ossimulator;
+package com.tsdv.javatraining.ossimulator.component;
 
-import com.tsdv.javatraining.ossimulator.model.NumberDisplayer;
-import com.tsdv.javatraining.ossimulator.model.TextDisplayer;
-import com.tsdv.javatraining.ossimulator.model.DataSegment;
+import com.tsdv.javatraining.ossimulator.data.DataSegment;
+import java.util.List;
 
 /**
  * Class represent the operating system
@@ -21,32 +20,13 @@ public class OperatingSystem {
     private CPU cpu;
     private Memory memory;
 
-    public void loadProgram(DataSegment programData[]) {
-        // load user program data to memory
-        memory.load(programData);
-
-        // throw new UnsupportedOperationException();
-    }
-
-    public void setTimer(int TickTime) {
-        // set tick time for timer CPU
-        cpu.setTimer(0, TickTime);
-
-        // throw new UnsupportedOperationException();
-    }
-
-    public void eraseProgram() {
-        // clear memory
-        memory.clear();
-        throw new UnsupportedOperationException();
-    }
-
-    public void StartSimulation() {
-        // Start cpu
-        cpu.start();
-        throw new UnsupportedOperationException();
-    }
-
+    public OperatingSystem() {
+        InitComponents();
+    }    
+    
+    /**
+     * Initialize system components
+     */
     private void InitComponents() {
         // create new memory
         memory = new Memory(SYSTEM_MEMORY_SIZE);
@@ -63,10 +43,40 @@ public class OperatingSystem {
         cpu.connectPeripheral(1, numDisplayer);
         // connect port 2 os cpu to number dislayer
         cpu.connectPeripheral(2, textDisplayer);
+    }    
+    
+    /**
+     * Load user program to system memory
+     * @param programData 
+     */
+    public void loadProgram(List<DataSegment> programData) {
+        // load user program data to memory
+        memory.load(programData);
     }
 
-    public OperatingSystem() {
-        InitComponents();
+    /**
+     * clear system memory
+     */
+    public void eraseProgram() {
+        // clear memory
+        memory.clear();
+    }
+
+    /**
+     * set timer period for CPU
+     * @param TickTime timer period
+     */
+    public void setTimer(int TickTime) {
+        // set tick time for timer CPU
+        cpu.setTimer(1, TickTime);
+    }
+    
+    /**
+     * Start system
+     */
+    public void Start() {
+        // Start cpu
+        cpu.start();
     }
 
 }

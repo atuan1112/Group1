@@ -3,10 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/TrinhNX_DEV/Workspace/OSSimulator/src/com/tsdv/javatraining/ossimulator/api/Observer.java</file>
-            <file>file:/E:/TrinhNX_DEV/Workspace/OSSimulator/src/com/tsdv/javatraining/ossimulator/OSSimulator.java</file>
-            <file>file:/E:/TrinhNX_DEV/Workspace/OSSimulator/src/com/tsdv/javatraining/ossimulator/api/Subject.java</file>
-            <file>file:/E:/TrinhNX_DEV/Workspace/OSSimulator/src/com/tsdv/javatraining/ossimulator/api/Timer.java</file>
+            <file>file:/C:/Users/toantv.TOSHIBA-TSDV/Documents/NetBeansProjects/Group1/branch1/branch1/src/com/tsdv/javatraining/ossimulator/OSSimulator.java</file>
+            <file>file:/C:/Users/toantv.TOSHIBA-TSDV/Documents/NetBeansProjects/Group1/branch1/branch1/src/com/tsdv/javatraining/ossimulator/model/CPU.java</file>
+            <file>file:/C:/Users/toantv.TOSHIBA-TSDV/Documents/NetBeansProjects/Group1/branch1/branch1/src/com/tsdv/javatraining/ossimulator/util/ErrMessage.java</file>
+            <file>file:/C:/Users/toantv.TOSHIBA-TSDV/Documents/NetBeansProjects/Group1/branch1/branch1/src/com/tsdv/javatraining/ossimulator/model/OperatingSystem.java</file>
         </group>
     </open-files>
 </project-private>

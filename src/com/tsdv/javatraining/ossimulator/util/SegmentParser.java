@@ -5,7 +5,7 @@
  */
 package com.tsdv.javatraining.ossimulator.util;
 
-import com.tsdv.javatraining.ossimulator.model.DataSegment;
+import com.tsdv.javatraining.ossimulator.data.DataSegment;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -18,7 +18,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * Class to parse the user program file into data segment
+ * 
  * @author TrinhNX
  */
 public class SegmentParser {
@@ -50,9 +51,9 @@ public class SegmentParser {
             //          If need address => create new datasegment
             // Step 3: Return list as array            
             String line;
+            DataSegment.Builder builder = new DataSegment.Builder();
             do {
-                DataSegment.Builder builder = new DataSegment.Builder();
-                line = bufferedReader.readLine().trim();
+                line = bufferedReader.readLine();
                 if (isValidInstruction(line)) {
                     int data = getInstructionData(line);
                     if (line.startsWith(".")) {
@@ -67,11 +68,11 @@ public class SegmentParser {
                         builder.addValue(data);
                     }
                 }
-                if (!builder.isEmpty()) {
-                    dataSegment.add(builder.build());
-                }
-            } while (line != null);
 
+            } while (line != null);
+            if (!builder.isEmpty()) {
+                dataSegment.add(builder.build());
+            }
         } catch (IOException ex) {
             Logger.getLogger(SegmentParser.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -85,6 +86,9 @@ public class SegmentParser {
      * @return
      */
     public static boolean isValidInstruction(final String line) {
+        if (line == null) {
+            return false;
+        }
         return matchInstruction(line).find();
     }
 

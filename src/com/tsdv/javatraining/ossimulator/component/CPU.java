@@ -3,16 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsdv.javatraining.ossimulator;
+package com.tsdv.javatraining.ossimulator.component;
 
 import com.tsdv.javatraining.ossimulator.api.Peripheral;
-import com.tsdv.javatraining.ossimulator.model.Instruction;
-import com.tsdv.javatraining.ossimulator.model.InstructionInfo;
-import com.tsdv.javatraining.ossimulator.model.Port;
-import com.tsdv.javatraining.ossimulator.api.Timer;
+import com.tsdv.javatraining.ossimulator.api.TimerObserver;
+import com.tsdv.javatraining.ossimulator.data.Instruction;
+import com.tsdv.javatraining.ossimulator.data.InstructionInfo;
+import com.tsdv.javatraining.ossimulator.exception.IllegalAccessMemoryException;
 import com.tsdv.javatraining.ossimulator.util.ErrMessage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 
 /**
  *  Class represent the CPU
@@ -27,7 +29,13 @@ public class CPU {
     private static final int TIMER_PROCESS_ADDRESS = 1000;
     /* Start interrupt process address */    
     private static final int INTERUPT_PROCESS_ADDRESS = 1500;
-
+    /* Default timer tick */
+    private static final int DEFAULT_TIMER_TICK = 100;
+    
+    /* CPU state */
+    private static final int NORMAL_MODE = 0;
+    private static final int SYSTEM_MODE = 1;
+    
     /* CPU's ports */
     private List<Port> portList;
     /* CPU's timer */    
@@ -39,14 +47,30 @@ public class CPU {
     private int SP;
     private int IR;
     private int AC,X,Y;
-
+    
+    /* CPU state */
+    private int CPUState;
     /* end program flag */
     private boolean isEndProgram;
     
+    /**
+     * Constructor to create CPU
+     * hard CPU configuration
+     * @param memory 
+     */
     public CPU(Memory memory) {
         // set refer to memory
         this.memory = memory;
+        this.timerList = new ArrayList<>();
+        this.portList = new ArrayList<>();
         // init timer
+        Timer timer1 = new Timer(DEFAULT_TIMER_TICK, new TimerObserver() {
+            @Override
+            public void onTimerEvent() {
+                processTimerInterrupt();
+            }
+        });
+        timerList.add(timer1);
         
         // init port
         Port port1 = new Port(1);
@@ -58,12 +82,13 @@ public class CPU {
         // set end flag to flase
         isEndProgram = false;
         
-        // throw new UnsupportedOperationException();
     }
     
     public void setTimer(int TimerID, int TickTime){
         // set Timer interval time
-        throw new UnsupportedOperationException();
+        Timer timer = timerList.get(TimerID - 1);
+        timer.setTickTime(TickTime);
+        timer.reset();
     }
     
     public void connectPeripheral(int portID, Peripheral peripheral){
@@ -74,7 +99,6 @@ public class CPU {
                 port.connect(peripheral);
             }
         }
-        // throw new UnsupportedOperationException();
     }
     
     /**
@@ -83,60 +107,57 @@ public class CPU {
     public void start(){
         // init registers
         initRegisters();
+        // reset system state
+        CPUState = NORMAL_MODE;
+        
         // while not end of program
         while (isEndProgram == false){
-            // fetch instruction
-            fetchInstruction();
-            // decode instruction
-            Instruction instruction = decodeInstruction();
-            // execute instruction
-            executeInstruction(instruction);
-            // update timer
-            
+            try {
+                // fetch instruction
+                fetchInstruction();
+                // decode instruction
+                Instruction instruction = decodeInstruction();
+                // execute instruction
+                executeInstruction(instruction);
+                // update timer
+                updateTimer();
+            } catch(IllegalAccessMemoryException | IllegalArgumentException e) {
+                portErr(e.getMessage());
+                endProgram();
+            }
         }
-        // throw new UnsupportedOperationException();
     }
     
     private void initRegisters(){
-        PC = 0;
-        SP = memory.getCapacity() - 1;
-        AC = 0;
-        X = 0;
-        Y = 0;
+        this.PC = 0;
+        this.SP = memory.getCapacity() - 1;
+        this.AC = 0;
+        this.X = 0;
+        this.Y = 0;
     }
     
-    /**
-     * process timer interrupt
-     */
-    private void processTimerInterrupt(){
-        // push system state
-        pushSystemState();
-        // update PC = TIMER_PROCESS_ADDRESS
-        PC = TIMER_PROCESS_ADDRESS;
-        throw new UnsupportedOperationException();
-    }
+
     
     /**
      * fetch next instruction in the memory
      */    
-    private void fetchInstruction(){
+    private void fetchInstruction() throws IllegalAccessMemoryException{
         // read next instruction in memory at the address in PC
         // store the instrucion in IR
-        IR  = memory.read(PC);
+        this.IR  = readMemory(this.PC);
         // increase PC
-        PC++;
+        this.PC++;
         
-        //throw new UnsupportedOperationException();
     }
     
     /**
      * decode the current instruction
      * @return decoded instruction
      */
-    private Instruction decodeInstruction(){
+    private Instruction decodeInstruction() throws IllegalAccessMemoryException{
         // Create new instruction object
         Instruction instruction = new Instruction();
-        InstructionInfo instructionInfo = null;
+        InstructionInfo instructionInfo;
     
         // find the instruction info from instruction set
         instructionInfo = findInstructionInfo();
@@ -144,32 +165,34 @@ public class CPU {
         
         // read the operands from memory
         for (int i = 0; i < instructionInfo.numOfOperands; i ++){
-            int operand = memory.read(PC);
-            PC++;
+            int operand = readMemory(this.PC);
+            this.PC++;
             instruction.addOperands(operand);
         }
 
         return instruction;
-        // throw new UnsupportedOperationException();
     }
     
+    /**
+     * find instruction info base on opt code
+     * @return 
+     */
     private InstructionInfo findInstructionInfo()
     {
         for (InstructionInfo info : InstructionInfo.values()) 
         {
-            if (info.optCode == IR){
+            if (info.optCode == this.IR){
                 return info;
             }
         }
         throw new IllegalArgumentException(ErrMessage.NOT_SUPPORT_INSTRUCTION);
-        // throw new UnsupportedOperationException();
     }
     
     /**
      * Execute instruction
      * @param instruction instruction to be executed
      */
-    private void executeInstruction(Instruction instruction) {
+    private void executeInstruction(Instruction instruction) throws IllegalAccessMemoryException {
         InstructionInfo info = instruction.getInfo();
         List<Integer> operands = instruction.getOperands();
 
@@ -273,7 +296,15 @@ public class CPU {
                 throw new IllegalArgumentException(ErrMessage.NOT_SUPPORT_INSTRUCTION);
         }
 
-        // throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * update all timers
+     */
+    private void updateTimer() {
+        timerList.forEach((timer) -> {
+            timer.updateTime();
+        });
     }
     
     /**
@@ -287,41 +318,42 @@ public class CPU {
     /**
     * Execute the Load Address instruction
     */
-    private void executeLoadAddr(int addr) {
+    private void executeLoadAddr(int addr) throws IllegalAccessMemoryException {
         // read memory at the adrr
         // store the value to AC
-        this.AC = this.memory.read(addr);
+        this.AC = this.readMemory(addr);
     }
 
-    private void executeLoadIndAddr(int indAddr) {
+    private void executeLoadIndAddr(int indAddr) throws IllegalAccessMemoryException {
         // read memory at the indAdrr to get the direct addr
+        int realAddr = this.readMemory(indAddr);
         // read memory at the direct addr to get the value
         // store the value to AC 
-        int realAddr = this.memory.read(indAddr);
-        this.AC = this.memory.read(realAddr);
+        this.AC = this.readMemory(realAddr);
     }
 
-    private void executeLoadIdxXAddr(int addr) {
+    private void executeLoadIdxXAddr(int addr) throws IllegalAccessMemoryException {
         // read memory at addr + X
+        int value = this.readMemory(addr + this.X);
         // store the read value to AC        
-        this.AC = this.memory.read(addr + this.X);
+        this.AC = value;
     }
 
-    private void executeLoadIdxYAddr(int addr) {
+    private void executeLoadIdxYAddr(int addr) throws IllegalAccessMemoryException {
         // read memory at addr + Y
         // store the read value to AC
-        this.AC = this.memory.read(addr + this.Y);
+        this.AC = this.readMemory(addr + this.Y);
     }
 
-    private void executeLoadSpx() {
+    private void executeLoadSpx() throws IllegalAccessMemoryException {
         // read memory at SP + X
         // store the read value to AC
-        this.AC = this.memory.read(this.SP - this.X); // SP grow down toward 0
+        this.AC = this.readMemory(this.SP - this.X); // SP grow down toward 0
     }
 
-    private void executeStoreAddr(int addr) {
+    private void executeStoreAddr(int addr) throws IllegalAccessMemoryException {
         // write value of AC to addr 
-        this.memory.write(addr, this.AC);
+        this.writeMemory(addr, this.AC);
     }
 
     private void executeGet() {
@@ -334,9 +366,11 @@ public class CPU {
 
     private void executePutPort(int portID) {
         // output data to port
-        Port port = this.portList.get(portID);
+        Port port = this.portList.get(portID - 1);
         if (port != null) {
-            port.outData(AC);
+            port.outData(this.AC);
+        } else {
+            throw new IllegalArgumentException(ErrMessage.INVALID_PORT_INSTRUCTION);
         }
     }
 
@@ -399,24 +433,28 @@ public class CPU {
         // if AC == 0
             // PC = addr
         if (this.AC == 0)
+        {
             this.PC = addr;
+        }
     }
 
     private void executeJumpIfNotEqual(int addr) {
         // if AC != 0
             // PC = addr
         if (this.AC != 0)
+        {
             this.PC = addr;
+        }
     }
 
-    private void executeCallAddr(int addr) {
+    private void executeCallAddr(int addr) throws IllegalAccessMemoryException {
         // push system state
         // PC = addr
         pushSystemState();
         this.PC = addr;
     }
 
-    private void executeRet() {
+    private void executeRet() throws IllegalAccessMemoryException {
         // pop system state
         popSystemState();
     }
@@ -431,55 +469,105 @@ public class CPU {
         this.X--;
     }
 
-    private void executePush() {
+    private void executePush() throws IllegalAccessMemoryException {
         // write AC to memory at address in SP
         // SP--
-        this.memory.write(SP, AC);
+        this.writeMemory(this.SP, this.AC);
         this.SP--;
     }
 
-    private void executePop() {
+    private void executePop() throws IllegalAccessMemoryException {
         // read AC from memory at address in SP
         // SP++
-        this.AC = this.memory.read(SP);
-        SP++;
+        this.AC = this.readMemory(this.SP);
+        this.SP++;
     }
 
-    private void executeInt() {
-        // push system state
-        // PC = INTERUPT_PROCESS_ADDRESS
-        throw new UnsupportedOperationException();
+    private void executeInt() throws IllegalAccessMemoryException {
+        processProgramInterrupt();
     }
 
-    private void executeIret() {
-        // pop system state
-        throw new UnsupportedOperationException();
+    private void executeIret() throws IllegalAccessMemoryException {
+        returnFromInterupt();
     }
 
     private void executeEnd() {
         // set end of program flag to true
-        throw new UnsupportedOperationException();
+        endProgram();
     }
+    
+    
+    /**
+     * process timer interrupt
+     */
+    private void processTimerInterrupt(){
+        if (this.CPUState != SYSTEM_MODE && hasTimerHandle()) {
+            try {
+                // push system state
+                pushSystemState();
+            } catch (IllegalAccessMemoryException ex) {
+                portErr(ex.getMessage());
+            }
+            // update PC = TIMER_PROCESS_ADDRESS
+            this.PC = TIMER_PROCESS_ADDRESS;
+            this.CPUState = SYSTEM_MODE;
+        }
+    }
+    
+    /**
+     * process timer interrupt
+     */
+    private void processProgramInterrupt(){
+        if (this.CPUState != SYSTEM_MODE && hasInterruptHandle()) {
+            try {
+                // push system state
+                pushSystemState();
+            } catch (IllegalAccessMemoryException ex) {
+                portErr(ex.getMessage());
+            }
+            // update PC = TIMER_PROCESS_ADDRESS
+            this.PC = INTERUPT_PROCESS_ADDRESS;
+            this.CPUState = SYSTEM_MODE;
+        }
+    }
+    
+    /**
+     * return from a interrupt process
+     */
+    private void returnFromInterupt() throws IllegalAccessMemoryException {
+        if (this.CPUState == SYSTEM_MODE){
+            popSystemState();
+            this.CPUState = NORMAL_MODE;
+        }
+    }    
     
     /**
     * Store system state before interrupt or function call
     */
-    private void pushSystemState(){
+    private void pushSystemState() throws IllegalAccessMemoryException{
         // write PC to memory at the address of SP - 2 in system memory stack
         // write SP to memory at the address of SP - 3 in system memory stack
         // SP = SP - 2
-        throw new UnsupportedOperationException();
+        writeMemory(this.SP - 2, PC);
+        writeMemory(this.SP - 3, SP);
+        this.SP = this.SP - 2;
     }
     
     /**
     * Restore system state after interrupt or function call
     */
-    private void popSystemState(){
+    private void popSystemState() throws IllegalAccessMemoryException{
         // read new PC from memory at the address of SP in system memory stack
         // read new SP from memory at the address of SP - 1 in system memory stack
-        throw new UnsupportedOperationException();
+        
+        this.PC = readMemory(this.SP);
+        this.SP = readMemory(this.SP - 1);
     }
     
+    /**
+     * print error to port 2
+     * @param errMsg 
+     */
     private void portErr(String errMsg){
         for (int i = 0; i < errMsg.length(); i ++) {
             portList.get(1).outData(errMsg.charAt(i));
@@ -487,7 +575,63 @@ public class CPU {
         portList.get(1).outData('\n');
     }
     
+    /**
+     * stop CPU execution cycle
+     */
     private void endProgram(){
         isEndProgram = true;
+    }
+    
+    /**
+     * check if timer is handled in the process 
+     * @return false if no timer handle
+     */
+    private boolean hasTimerHandle(){
+        int timerFirstOptcode = 0;
+        try {
+            timerFirstOptcode = readMemory(TIMER_PROCESS_ADDRESS);
+        } catch (IllegalAccessMemoryException ex) {
+            return false;
+        }
+        return timerFirstOptcode != 0;
+    }
+    
+    /**
+     * check if interrupt is handled in the process
+     * @return 
+     */
+    private boolean hasInterruptHandle(){
+        int interruptFirstOptcode = 0;
+        try {
+            interruptFirstOptcode = readMemory(INTERUPT_PROCESS_ADDRESS);
+        } catch (IllegalAccessMemoryException ex) {
+            return false;
+        }
+        return interruptFirstOptcode != 0;
+    }
+    
+    /**
+     * read form memory
+     * @param addr
+     * @return
+     * @throws IllegalAccessMemoryException 
+     */
+    private int readMemory(int addr) throws IllegalAccessMemoryException
+    {
+        return this.memory.read(addr);
+    }
+    
+    /**
+     * write to memory 
+     * @param addr
+     * @param data
+     * @throws IllegalAccessMemoryException 
+     */
+    private void writeMemory(int addr, int  data) throws IllegalAccessMemoryException
+    {
+        if (addr >= SYSTEM_DATA_ADDRESS) {
+            throw new IllegalAccessMemoryException(ErrMessage.INVALID_ACCESS_MEMORY);
+        }
+        this.memory.write(addr, data);
     }
 }

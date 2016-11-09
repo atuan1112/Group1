@@ -9,22 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Require Java8
+ * Subject for observer
  * @author TrinhNX
  */
-public class Subject {
+public class TimerSubject {
 
     /**
      * Contain the list of the observer items
      */
-    private final List<Observer> observers = new ArrayList<>();
+    private final List<TimerObserver> observers = new ArrayList<>();
 
     /**
      * Attach an observer to the list
      *
      * @param observer
      */
-    public void attach(Observer observer) {
+    public void attach(TimerObserver observer) {
         if (!observers.contains(observer)) {
             observers.add(observer);
         }
@@ -35,7 +35,7 @@ public class Subject {
      *
      * @param observer
      */
-    public void detach(Observer observer) {
+    public void detach(TimerObserver observer) {
         observers.remove(observer);
     }
 

@@ -6,10 +6,10 @@
 package com.tsdv.javatraining.ossimulator.api;
 
 /**
- *
+ * Observer Timer tick event Class
  * @author TrinhNX
  */
-public abstract class Observer {
+public abstract class TimerObserver {
 
     /**
      * Call whenever the observer got update

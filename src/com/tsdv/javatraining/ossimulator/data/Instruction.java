@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsdv.javatraining.ossimulator.model;
+package com.tsdv.javatraining.ossimulator.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,8 @@ public class Instruction {
     private List<Integer> operandList;
 
     public Instruction() {
-        throw new UnsupportedOperationException();
+        info = null;
+        operandList = new ArrayList<>();
     }
 
     public int getOptCode() {

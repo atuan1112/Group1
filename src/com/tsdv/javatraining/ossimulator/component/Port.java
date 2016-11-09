@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsdv.javatraining.ossimulator.model;
+package com.tsdv.javatraining.ossimulator.component;
 
 import com.tsdv.javatraining.ossimulator.api.Peripheral;
 

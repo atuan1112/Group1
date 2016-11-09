@@ -5,7 +5,9 @@
  */
 package com.tsdv.javatraining.ossimulator;
 
-import com.tsdv.javatraining.ossimulator.model.TextDisplayer;
+import com.tsdv.javatraining.ossimulator.component.CPU;
+import com.tsdv.javatraining.ossimulator.component.Memory;
+import com.tsdv.javatraining.ossimulator.component.TextDisplayer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
