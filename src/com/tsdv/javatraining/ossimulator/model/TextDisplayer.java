@@ -3,39 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsdv.javatraining.ossimulator;
+package com.tsdv.javatraining.ossimulator.model;
+
+import com.tsdv.javatraining.ossimulator.api.Peripheral;
 
 /**
- * NumberDisplayer peripheral
- * 
+ * TextDisplayer peripheral
+ *
  */
-public class NumberDisplayer implements Peripheral {
-    private int type = -1;
-    
-    /**
-     * Constructor for NumberDisplayer
-     * @param type type of peripheral
-     */
-    public NumberDisplayer(int type) {
-        this.type = type;
-    }
+public class TextDisplayer implements Peripheral {
 
     /**
      * Get peripheral type
+     *
      * @return peripheral type
      */
     @Override
     public int getType() {
-        return this.type;
+        return Peripheral.TEXT_DISPLAYER;
     }
 
     /**
      * Print data as character
+     *
      * @param data data in Integer type
      */
     @Override
     public void outData(int data) {
-        System.out.print(data);
+        System.out.print(((char) data));
     }
-    
+
 }

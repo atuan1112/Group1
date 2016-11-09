@@ -5,45 +5,68 @@
  */
 package com.tsdv.javatraining.ossimulator;
 
+import com.tsdv.javatraining.ossimulator.model.NumberDisplayer;
+import com.tsdv.javatraining.ossimulator.model.TextDisplayer;
+import com.tsdv.javatraining.ossimulator.model.DataSegment;
+
 /**
  * Class represent the operating system
+ *
  * @author ToanTV
  */
 public class OperatingSystem {
+
     /* Operating system memory size */
-    private static final int SYSTEM_MEMORY_SIZE = 2000;        
-    private CPU cpu; 
+    private static final int SYSTEM_MEMORY_SIZE = 2000;
+    private CPU cpu;
     private Memory memory;
-    
-    public void loadProgram(ProgramData programData[]){
+
+    public void loadProgram(DataSegment programData[]) {
         // load user program data to memory
-        throw new UnsupportedOperationException();
+        memory.load(programData);
+
+        // throw new UnsupportedOperationException();
     }
-    
-    public void eraseProgram(){
+
+    public void setTimer(int TickTime) {
+        // set tick time for timer CPU
+        cpu.setTimer(0, TickTime);
+
+        // throw new UnsupportedOperationException();
+    }
+
+    public void eraseProgram() {
         // clear memory
-        throw new UnsupportedOperationException();
-    }
-    
-    public void StartSimulation(){
-        // Start cpu
-        throw new UnsupportedOperationException();
-    }
-    
-    private void InitComponents(){
-        // create new memory
-        // create new cpu 
-        // connect cpu with memory
-        // create text displayer
-        // create number displayer
-        // connect port 1 of cpu to text displyaer
-        // connect port 2 os cpu to number dislayer
+        memory.clear();
         throw new UnsupportedOperationException();
     }
 
-    public OperatingSystem() {
-        // InitComponents
+    public void StartSimulation() {
+        // Start cpu
+        cpu.start();
+        throw new UnsupportedOperationException();
     }
-    
-    
+
+    private void InitComponents() {
+        // create new memory
+        memory = new Memory(SYSTEM_MEMORY_SIZE);
+
+        // create new cpu 
+        // connect cpu with memory
+        cpu = new CPU(memory);
+
+        // create text displayer
+        TextDisplayer textDisplayer = new TextDisplayer();
+        // create number displayer
+        NumberDisplayer numDisplayer = new NumberDisplayer();
+        // connect port 1 of cpu to text displyaer
+        cpu.connectPeripheral(1, numDisplayer);
+        // connect port 2 os cpu to number dislayer
+        cpu.connectPeripheral(2, textDisplayer);
+    }
+
+    public OperatingSystem() {
+        InitComponents();
+    }
+
 }

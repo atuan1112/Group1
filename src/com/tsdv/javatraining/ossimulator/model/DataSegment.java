@@ -31,13 +31,22 @@ public class DataSegment {
         return data;
     }
 
+    public int getDataFromIndex(int index) {
+        // TODO: Index out of bound exception checking
+        return data[index];
+    }
+
+    public int size() {
+        return data.length;
+    }
+
     /**
      * Helper class to build the datasegment
      */
-    static class Builder {
+    public static class Builder {
 
         private int address;
-        private List<Integer> data;
+        private final List<Integer> data;
 
         public Builder() {
             address = 0;
@@ -52,6 +61,10 @@ public class DataSegment {
         public Builder addValue(int value) {
             data.add(value);
             return this;
+        }
+
+        public boolean isEmpty() {
+            return data.isEmpty();
         }
 
         public DataSegment build() {

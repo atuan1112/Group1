@@ -5,69 +5,75 @@
  */
 package com.tsdv.javatraining.ossimulator;
 
+import com.tsdv.javatraining.ossimulator.model.DataSegment;
+
 /**
  * Class represents physical memory of computer
- * 
+ *
  */
 public class Memory {
+    
     private int[] data;
     private int capacity;
-    private int programAddress = -1;
-    private int programSize = -1;
-    
+
     /**
      * Constructor for Memory class
-     * @param capacity 
+     *
+     * @param capacity
      */
     public Memory(int capacity) {
-        if (capacity <= 0 ) {
+        if (capacity <= 0) {
             throw new UnsupportedOperationException(String.format("Memory size [%d]. Must be greater than 0.", capacity));
         }
         data = new int[capacity];
+        this.capacity = capacity;
     }
-    
+
     /**
      * Load user program
+     *
      * @param data User program data
      */
-    public void load(ProgramData data) {
-        if (data.address > 0 && data.data.length > 0) {
-            programAddress = data.address;
-            programSize = data.data.length;
-            for (int i = 0; i < programSize; i ++) {
-                this.data[programAddress + i] = data.data[i];
+    public void load(DataSegment data[]) {
+        for (int i = 0; i < data.length; i++) {
+            if (data[i].getAddress() > 0 && data[i].size() > 0) {
+                int programAddress = data[i].getAddress();
+                int programSize = data[i].size();
+                for (int j = 0; j < programSize; j++) {
+                    this.data[programAddress + j] = data[i].getDataFromIndex(j);
+                }
             }
         }
     }
-    
+
     /**
      * Clear loaded user-program
      */
     public void clear() {
-        if (programAddress >= 0) {
-            for (int i = 0; i < programSize; i ++) {
-                this.data[programAddress + i] = 0;
-            }
-            programAddress = -1;
-            programSize = -1;
-        }
+        data = new int[capacity];
     }
-    
+
     /**
      * Get value at position "address" of memory
+     *
      * @param address
      * @return Integer value at position "address"
      */
     public int read(int address) {
         return data[address];
     }
-    
+
     /**
      * Write "data" to memory at position "address"
+     *
      * @param address position where "data" is written
      * @param data value of memory at position "address"
      */
     public void write(int address, int data) {
         this.data[address] = data;
+    }
+    
+    public int getCapacity() {
+        return capacity;
     }
 }

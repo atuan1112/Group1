@@ -5,8 +5,12 @@
  */
 package com.tsdv.javatraining.ossimulator;
 
-import com.tsdv.javatraining.ossimulator.api.Timer;
+import com.tsdv.javatraining.ossimulator.api.Peripheral;
 import com.tsdv.javatraining.ossimulator.model.Instruction;
+import com.tsdv.javatraining.ossimulator.model.InstructionInfo;
+import com.tsdv.javatraining.ossimulator.model.Port;
+import com.tsdv.javatraining.ossimulator.api.Timer;
+import com.tsdv.javatraining.ossimulator.util.ErrMessage;
 import java.util.List;
 import java.util.Random;
 
@@ -41,10 +45,20 @@ public class CPU {
     
     public CPU(Memory memory) {
         // set refer to memory
+        this.memory = memory;
         // init timer
+        
         // init port
+        Port port1 = new Port(1);
+        Port port2 = new Port(2);
+        
+        portList.add(port1);
+        portList.add(port2);
+        
         // set end flag to flase
-        throw new UnsupportedOperationException();
+        isEndProgram = false;
+        
+        // throw new UnsupportedOperationException();
     }
     
     public void setTimer(int TimerID, int TickTime){
@@ -54,20 +68,41 @@ public class CPU {
     
     public void connectPeripheral(int portID, Peripheral peripheral){
         // connect port to peripheral
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < portList.size(); i++ ) {
+            Port port = portList.get(i);
+            if (port.getId() == portID) {
+                port.connect(peripheral);
+            }
+        }
+        // throw new UnsupportedOperationException();
     }
     
     /**
      * Start the cpu operation
      */
     public void start(){
+        // init registers
+        initRegisters();
         // while not end of program
+        while (isEndProgram == false){
             // fetch instruction
+            fetchInstruction();
             // decode instruction
-            // increase PC
+            Instruction instruction = decodeInstruction();
             // execute instruction
+            executeInstruction(instruction);
             // update timer
-        throw new UnsupportedOperationException();
+            
+        }
+        // throw new UnsupportedOperationException();
+    }
+    
+    private void initRegisters(){
+        PC = 0;
+        SP = memory.getCapacity() - 1;
+        AC = 0;
+        X = 0;
+        Y = 0;
     }
     
     /**
@@ -75,7 +110,9 @@ public class CPU {
      */
     private void processTimerInterrupt(){
         // push system state
+        pushSystemState();
         // update PC = TIMER_PROCESS_ADDRESS
+        PC = TIMER_PROCESS_ADDRESS;
         throw new UnsupportedOperationException();
     }
     
@@ -85,8 +122,11 @@ public class CPU {
     private void fetchInstruction(){
         // read next instruction in memory at the address in PC
         // store the instrucion in IR
+        IR  = memory.read(PC);
         // increase PC
-        throw new UnsupportedOperationException();
+        PC++;
+        
+        //throw new UnsupportedOperationException();
     }
     
     /**
@@ -95,24 +135,145 @@ public class CPU {
      */
     private Instruction decodeInstruction(){
         // Create new instruction object
+        Instruction instruction = new Instruction();
+        InstructionInfo instructionInfo = null;
+    
         // find the instruction info from instruction set
+        instructionInfo = findInstructionInfo();
+        instruction.setInfo(instructionInfo);
+        
         // read the operands from memory
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < instructionInfo.numOfOperands; i ++){
+            int operand = memory.read(PC);
+            PC++;
+            instruction.addOperands(operand);
+        }
+
+        return instruction;
+        // throw new UnsupportedOperationException();
     }
     
-    private void findInstructionInfo()
+    private InstructionInfo findInstructionInfo()
     {
-        
+        for (InstructionInfo info : InstructionInfo.values()) 
+        {
+            if (info.optCode == IR){
+                return info;
+            }
+        }
+        throw new IllegalArgumentException(ErrMessage.NOT_SUPPORT_INSTRUCTION);
+        // throw new UnsupportedOperationException();
     }
     
     /**
      * Execute instruction
      * @param instruction instruction to be executed
      */
-    private void executeInstruction(Instruction instruction){
+    private void executeInstruction(Instruction instruction) {
+        InstructionInfo info = instruction.getInfo();
+        List<Integer> operands = instruction.getOperands();
+
         // switch base on instruction info
         // call the coresponding function
-        throw new UnsupportedOperationException();
+        switch (info) {
+            case LOAD_VALUE:
+                executeLoadValue(operands.get(0));
+                break;
+            case LOAD_ADDR:
+                executeLoadAddr(operands.get(0));
+                break;
+            case LOAD_IND_ADDR:
+                executeLoadIndAddr(operands.get(0));
+                break;
+            case LOAD_IDX_X_ADDR:
+                executeLoadIdxXAddr(operands.get(0));
+                break;
+            case LOAD_IDX_Y_ADDR:
+                executeLoadIdxYAddr(operands.get(0));
+                break;
+            case LOAD_SPX:
+                executeLoadSpx();
+                break;
+            case STORE_ADDR:
+                executeStoreAddr(operands.get(0));
+                break;
+            case GET:
+                executeGet();
+                break;
+            case PUT_PORT:
+                executePutPort(operands.get(0));
+                break;
+            case ADD_X:
+                executeAddX();
+                break;
+            case ADD_Y:
+                executeAddY();
+                break;
+            case SUB_X:
+                executeSubX();
+                break;
+            case SUB_Y:
+                executeSubY();
+                break;
+            case COPY_TO_X:
+                executeCopyToX();
+                break;
+            case COPY_FROM_X:
+                executeCopyFromX();
+                break;
+            case COPY_TO_Y:
+                executeCopyToY();
+                break;
+            case COPY_FROM_Y:
+                executeCopyFromY();
+                break;
+            case COPY_TO_SP:
+                executeCopyToSp();
+                break;
+            case COPY_FROM_SP:
+                executeCopyFromSp();
+                break;
+            case JUMP_ADDR:
+                executeJumpAddr(operands.get(0));
+                break;
+            case JUMP_IF_EQUAL:
+                executeJumpIfEqual(operands.get(0));
+                break;
+            case JUMP_IF_NOT_EQUAL:
+                executeJumpIfNotEqual(operands.get(0));
+                break;
+            case CALL_ADDR:
+                executeCallAddr(operands.get(0));
+                break;
+            case RET:
+                executeRet();
+                break;
+            case INCX:
+                executeIncX();
+                break;
+            case DECX:
+                executeDecX();
+                break;
+            case PUSH:
+                executePush();
+                break;
+            case POP:
+                executePop();
+                break;
+            case INT:
+                executeInt();
+                break;
+            case IRET:
+                executeIret();
+                break;
+            case END:
+                executeEnd();
+                break;
+            default:
+                throw new IllegalArgumentException(ErrMessage.NOT_SUPPORT_INSTRUCTION);
+        }
+
+        // throw new UnsupportedOperationException();
     }
     
     /**
@@ -319,4 +480,14 @@ public class CPU {
         throw new UnsupportedOperationException();
     }
     
+    private void portErr(String errMsg){
+        for (int i = 0; i < errMsg.length(); i ++) {
+            portList.get(1).outData(errMsg.charAt(i));
+        }
+        portList.get(1).outData('\n');
+    }
+    
+    private void endProgram(){
+        isEndProgram = true;
+    }
 }

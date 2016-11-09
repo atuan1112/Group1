@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsdv.javatraining.ossimulator;
+package com.tsdv.javatraining.ossimulator.api;
 
 /**
  * Interface of classes which represent peripheral in computer architecture
  * 
  */
 public interface Peripheral {
+    static final int TEXT_DISPLAYER = 1;
+    static final int NUMBER_DISPLAYER = 2;
+    
     /**
      * Get peripheral type
      * @return type
